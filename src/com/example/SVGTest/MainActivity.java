@@ -37,6 +37,12 @@ public class MainActivity extends Activity implements OnSVGViewInfoListener {
 		findViewById(R.id.radio2).setOnClickListener(OnRadioClickListener);
 		findViewById(R.id.radio3).setOnClickListener(OnRadioClickListener);
 		findViewById(R.id.radio4).setOnClickListener(OnRadioClickListener);
+	}
+
+	@Override
+	protected void onStart() {
+		// TODO Auto-generated method stub
+		super.onStart();
 
 		mSvgView.load(R.raw.svg1);
 	}
