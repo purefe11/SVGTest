@@ -1,7 +1,13 @@
 package com.example.SVGTest;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.text.DecimalFormat;
+
 import android.app.Activity;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Debug;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -10,13 +16,19 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 
 import com.example.SVGTest.SVGView.OnSVGViewInfoListener;
+import com.example.SVGTest.svg.SVG;
+import com.example.SVGTest.svg.SVGBuilder;
 
 public class MainActivity extends Activity implements OnSVGViewInfoListener {
+
+	//	private static final String TAG = "MainActivity";
 
 	private SVGView mSvgView = null;
 	private EditText mEditText1 = null;
 	private EditText mEditText2 = null;
 	private RadioButton mCheckedRadioButton = null;
+	private boolean mLoading = false;
+	private DecimalFormat mDF = new DecimalFormat();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +56,7 @@ public class MainActivity extends Activity implements OnSVGViewInfoListener {
 		// TODO Auto-generated method stub
 		super.onStart();
 
-		mSvgView.load(R.raw.svg1);
+		load(R.raw.svg1);
 	}
 
 	@Override
@@ -54,15 +66,23 @@ public class MainActivity extends Activity implements OnSVGViewInfoListener {
 		return true;
 	}
 
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+	}
+
 	OnClickListener OnRadioClickListener = new OnClickListener() {
 
 		@Override
 		public void onClick(View v) {
 			// TODO Auto-generated method stub
-			if (!mSvgView.isAvailable()) {
+			if (mLoading) {
 				mCheckedRadioButton.setChecked(true);
 				return;
 			}
+
+			System.gc();
 
 			int resId = 0;
 
@@ -88,22 +108,70 @@ public class MainActivity extends Activity implements OnSVGViewInfoListener {
 
 			mEditText1.setText("");
 			mEditText2.setText("");
-			mSvgView.load(resId);
+			load(resId);
 		}
 
 	};
 
-	@Override
-	public void OnSVGViewInfo1(String info) {
-		// TODO Auto-generated method stub
-		mEditText1.append(info + "\n");
+	private void load(int resId) {
 
+		if (mLoading) {
+			return;
+		}
+
+		new AsyncTask<Integer, Void, SVG>() {
+			long buildTime;
+			int fileSize;
+
+			@Override
+			protected void onPreExecute() {
+				// TODO Auto-generated method stub
+				mLoading = true;
+			}
+
+			@Override
+			protected void onPostExecute(SVG svg) {
+				// TODO Auto-generated method stub
+
+				System.gc();
+
+				mEditText1.setText("Size: " + mDF.format(fileSize) + "Byte\nBuild: " + mDF.format(buildTime) + "μs\nNative: " + mDF.format(Debug.getNativeHeapAllocatedSize() / 1024) + "KB\nDalvik: " + mDF.format(Runtime.getRuntime().totalMemory() / 1024 - Runtime.getRuntime().freeMemory() / 1024) + "KB");
+
+				mSvgView.setSVG(svg);
+
+				mLoading = false;
+			}
+
+			@Override
+			protected SVG doInBackground(Integer... params) {
+				// TODO Auto-generated method stub
+				SVGBuilder builder = new SVGBuilder();
+
+				InputStream data = getResources().openRawResource(params[0]);
+
+				try {
+					fileSize = data.available();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+				builder.readFromInputStream(data);
+
+				long start = System.nanoTime();
+				SVG svg = builder.build();
+				long end = System.nanoTime();
+				buildTime = (end - start) / 1000;
+
+				return svg;
+			}
+		}.execute(resId);
 	}
 
 	@Override
-	public void OnSVGViewInfo2(String info) {
+	public void didSVGViewDraw(String time) {
 		// TODO Auto-generated method stub
-		mEditText2.append(info + "\n");
+		mEditText2.append(time + "\n");
 
 	}
 

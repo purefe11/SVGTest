@@ -1,28 +1,22 @@
 package com.example.SVGTest;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.text.DecimalFormat;
 
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Picture;
 import android.graphics.RectF;
-import android.os.AsyncTask;
 import android.util.AttributeSet;
 import android.util.FloatMath;
 import android.view.MotionEvent;
 import android.view.View;
 
 import com.example.SVGTest.svg.SVG;
-import com.example.SVGTest.svg.SVGBuilder;
 
 public class SVGView extends View {
 
 	public abstract static interface OnSVGViewInfoListener {
-		public abstract void OnSVGViewInfo1(String info);
-
-		public abstract void OnSVGViewInfo2(String info);
+		public abstract void didSVGViewDraw(String time);
 	}
 
 	private OnSVGViewInfoListener mListener;
@@ -35,8 +29,6 @@ public class SVGView extends View {
 
 	private SVG mSvg = null;
 
-	private boolean mRunning = false;
-
 	private DecimalFormat mDF = new DecimalFormat();
 	private RectF mImageRect = new RectF();
 
@@ -46,76 +38,20 @@ public class SVGView extends View {
 		setLayerType(LAYER_TYPE_SOFTWARE, null);
 	}
 
-	public boolean isAvailable() {
-		return (!mRunning);
-	}
+	public void setSVG(SVG svg) {
+		// TODO Auto-generated method stub
 
-	public boolean load(int resId) {
+		mSvg = svg;
 
-		if (mRunning) {
-			return false;
-		}
+		float imageWidth = mSvg.getLimits().right;
+		float imageHeight = mSvg.getLimits().bottom;
 
-		new AsyncTask<Integer, Void, Void>() {
+		float x = getWidth() / 2 - imageWidth / 2;
+		float y = getHeight() / 2 - imageHeight / 2;
 
-			long loadTime;
-			long buildTime;
-			int fileSize;
+		mImageRect.set(x, y, x + imageWidth, y + imageHeight);
 
-			@Override
-			protected void onPreExecute() {
-				// TODO Auto-generated method stub
-				mRunning = true;
-			}
-
-			@Override
-			protected void onPostExecute(Void result) {
-				// TODO Auto-generated method stub
-				mListener.OnSVGViewInfo1("size: " + mDF.format(fileSize) + "byte");
-				mListener.OnSVGViewInfo1("load: " + mDF.format(loadTime) + "μs");
-				mListener.OnSVGViewInfo1("build: " + mDF.format(buildTime) + "μs");
-
-				float imageWidth = mSvg.getLimits().right;
-				float imageHeight = mSvg.getLimits().bottom;
-
-				float x = getWidth() / 2 - imageWidth / 2;
-				float y = getHeight() / 2 - imageHeight / 2;
-
-				mImageRect.set(x, y, x + imageWidth, y + imageHeight);
-
-				invalidate();
-				mRunning = false;
-			}
-
-			@Override
-			protected Void doInBackground(Integer... params) {
-				// TODO Auto-generated method stub
-				SVGBuilder builder = new SVGBuilder();
-
-				long start = System.nanoTime();
-				InputStream data = getResources().openRawResource(params[0]);
-				long end = System.nanoTime();
-				loadTime = (end - start) / 1000;
-
-				try {
-					fileSize = data.available();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-
-				builder.readFromInputStream(data);
-
-				start = System.nanoTime();
-				mSvg = builder.build();
-				end = System.nanoTime();
-				buildTime = (end - start) / 1000;
-
-				return null;
-			}
-		}.execute(resId);
-
-		return true;
+		invalidate();
 	}
 
 	@Override
@@ -131,7 +67,7 @@ public class SVGView extends View {
 		long end = System.nanoTime();
 		long microseconds = (end - start) / 1000;
 
-		mListener.OnSVGViewInfo2("draw: " + mDF.format(microseconds) + "μs");
+		mListener.didSVGViewDraw("Draw: " + mDF.format(microseconds) + "μs");
 	}
 
 	private boolean mZooming = false;
@@ -146,10 +82,6 @@ public class SVGView extends View {
 
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
-
-		if (mRunning) {
-			return true;
-		}
 
 		switch (event.getAction() & MotionEvent.ACTION_MASK) {
 			case MotionEvent.ACTION_DOWN:
@@ -208,19 +140,4 @@ public class SVGView extends View {
 
 		invalidate();
 	}
-
-	//	public static void logHeap() {
-	//
-	//		Double allocated = new Double(Debug.getNativeHeapAllocatedSize()) / new Double((1024));
-	//		Double available = new Double(Debug.getNativeHeapSize()) / 1024.0;
-	//		Double free = new Double(Debug.getNativeHeapFreeSize()) / 1024.0;
-	//		DecimalFormat df = new DecimalFormat();
-	//		df.setMaximumFractionDigits(2);
-	//		df.setMinimumFractionDigits(2);
-	//
-	//		Log.d(TAG, "================================================================================");
-	//		Log.d(TAG, "heap native: allocated " + df.format(allocated) + "KB of " + df.format(available) + "KB (" + df.format(free) + "KB free)");
-	//		Log.d(TAG, "memory: allocated: " + df.format(new Double(Runtime.getRuntime().totalMemory() / 1024)) + "KB of " + df.format(new Double(Runtime.getRuntime().maxMemory() / 1024)) + "KB (" + df.format(new Double(Runtime.getRuntime().freeMemory() / 1024)) + "KB free)");
-	//	}
-
 }

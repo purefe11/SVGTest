@@ -8,10 +8,10 @@
 
     <RadioGroup
         android:id="@+id/radioGroup1"
-        android:orientation="horizontal"
-        android:layout_marginTop="5dp"
         android:layout_width="match_parent"
         android:layout_height="30dp"
+        android:layout_marginTop="5dp"
+        android:orientation="horizontal"
         android:weightSum="5" >
 
         <RadioButton
@@ -35,14 +35,14 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="3" />
-        
+
         <RadioButton
             android:id="@+id/radio3"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="4" />
-        
+
         <RadioButton
             android:id="@+id/radio4"
             android:layout_width="0dp"
@@ -51,51 +51,40 @@
             android:text="5" />
     </RadioGroup>
 
-
-        
-        <com.example.SVGTest.SVGView
+    <com.example.SVGTest.SVGView
         android:id="@+id/testView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1" />
-        
-        <LinearLayout android:layout_width="match_parent"
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="105dp"
-        android:orientation="horizontal">
-        
-            <EditText
-                android:gravity="left"
-        android:id="@+id/editText1"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:layout_marginLeft="4dp"
-        android:enabled="false"
-        android:background="#00000000"
-        android:inputType="textMultiLine" />
-        
-            <EditText
-                android:gravity="right"
-        android:id="@+id/editText2"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:layout_marginRight="4dp"
-        android:enabled="false"
-        android:background="#00000000"
-        android:inputType="textMultiLine" />
-            
-            
-            
-            
-            
-            
-        </LinearLayout>
+        android:orientation="horizontal" >
 
-    
-        
+        <EditText
+            android:id="@+id/editText1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="4dp"
+            android:layout_weight="1"
+            android:background="#00000000"
+            android:enabled="false"
+            android:gravity="left"
+            android:textSize="14sp"
+            android:inputType="textMultiLine" />
 
-
-    
+        <EditText
+            android:id="@+id/editText2"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginRight="4dp"
+            android:layout_weight="1"
+            android:background="#00000000"
+            android:enabled="false"
+            android:gravity="left"
+            android:textSize="14sp"
+            android:inputType="textMultiLine" />
+    </LinearLayout>
 
 </LinearLayout>
