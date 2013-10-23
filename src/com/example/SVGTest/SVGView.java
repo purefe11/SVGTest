@@ -16,7 +16,7 @@ import com.example.SVGTest.svg.SVG;
 public class SVGView extends View {
 
 	public abstract static interface OnSVGViewInfoListener {
-		public abstract void didSVGViewDraw(String time);
+		public abstract void onSVGViewInfo(String info);
 	}
 
 	private OnSVGViewInfoListener mListener;
@@ -30,7 +30,9 @@ public class SVGView extends View {
 	private SVG mSvg = null;
 
 	private DecimalFormat mDF = new DecimalFormat();
-	private RectF mImageRect = new RectF();
+
+	private float mImageWidth = 0f;
+	private float mImageHeight = 0f;
 
 	public SVGView(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -43,16 +45,13 @@ public class SVGView extends View {
 
 		mSvg = svg;
 
-		float imageWidth = mSvg.getLimits().right;
-		float imageHeight = mSvg.getLimits().bottom;
-
-		float x = getWidth() / 2 - imageWidth / 2;
-		float y = getHeight() / 2 - imageHeight / 2;
-
-		mImageRect.set(x, y, x + imageWidth, y + imageHeight);
+		mImageWidth = mSvg.getLimits().right;
+		mImageHeight = mSvg.getLimits().bottom;
 
 		invalidate();
 	}
+
+	private RectF mRect = new RectF();
 
 	@Override
 	protected void onDraw(Canvas canvas) {
@@ -60,14 +59,18 @@ public class SVGView extends View {
 			return;
 		}
 
+		float x = getWidth() / 2 - mImageWidth / 2;
+		float y = getHeight() / 2 - mImageHeight / 2;
+		mRect.set(x, y, x + mImageWidth, y + mImageHeight);
+
 		Picture picture = mSvg.getPicture();
 
 		long start = System.nanoTime();
-		canvas.drawPicture(picture, mImageRect);
+		canvas.drawPicture(picture, mRect);
 		long end = System.nanoTime();
 		long microseconds = (end - start) / 1000;
 
-		mListener.didSVGViewDraw("Draw: " + mDF.format(microseconds) + "μs");
+		mListener.onSVGViewInfo("Draw: " + mDF.format(microseconds) + "μs");
 	}
 
 	private boolean mZooming = false;
@@ -118,8 +121,8 @@ public class SVGView extends View {
 
 	public void zoom(boolean in, float delta) {
 
-		float imageWidth = mImageRect.width();
-		float imageHeight = mImageRect.height();
+		float imageWidth = mImageWidth;
+		float imageHeight = mImageHeight;
 
 		if (in) {
 			imageWidth += delta;
@@ -133,10 +136,8 @@ public class SVGView extends View {
 			return;
 		}
 
-		float x = getWidth() / 2 - imageWidth / 2;
-		float y = getHeight() / 2 - imageHeight / 2;
-
-		mImageRect.set(x, y, x + imageWidth, y + imageHeight);
+		mImageWidth = imageWidth;
+		mImageHeight = imageHeight;
 
 		invalidate();
 	}

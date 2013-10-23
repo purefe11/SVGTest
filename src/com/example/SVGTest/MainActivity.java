@@ -169,9 +169,9 @@ public class MainActivity extends Activity implements OnSVGViewInfoListener {
 	}
 
 	@Override
-	public void didSVGViewDraw(String time) {
+	public void onSVGViewInfo(String info) {
 		// TODO Auto-generated method stub
-		mTextView2.append(time + "\n");
+		mTextView2.setText(info);
 
 	}
 
