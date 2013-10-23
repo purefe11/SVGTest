@@ -12,8 +12,8 @@ import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
-import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.TextView;
 
 import com.example.SVGTest.SVGView.OnSVGViewInfoListener;
 import com.example.SVGTest.svg.SVG;
@@ -24,8 +24,8 @@ public class MainActivity extends Activity implements OnSVGViewInfoListener {
 	//	private static final String TAG = "MainActivity";
 
 	private SVGView mSvgView = null;
-	private EditText mEditText1 = null;
-	private EditText mEditText2 = null;
+	private TextView mTextView1 = null;
+	private TextView mTextView2 = null;
 	private RadioButton mCheckedRadioButton = null;
 	private boolean mLoading = false;
 	private DecimalFormat mDF = new DecimalFormat();
@@ -39,8 +39,8 @@ public class MainActivity extends Activity implements OnSVGViewInfoListener {
 		setContentView(R.layout.activity_main);
 
 		mSvgView = (SVGView)findViewById(R.id.testView);
-		mEditText1 = (EditText)findViewById(R.id.editText1);
-		mEditText2 = (EditText)findViewById(R.id.editText2);
+		mTextView1 = (TextView)findViewById(R.id.textView1);
+		mTextView2 = (TextView)findViewById(R.id.textView2);
 
 		mSvgView.setOnTestViewInfoListener(this);
 
@@ -106,8 +106,8 @@ public class MainActivity extends Activity implements OnSVGViewInfoListener {
 
 			mCheckedRadioButton = (RadioButton)v;
 
-			mEditText1.setText("");
-			mEditText2.setText("");
+			mTextView1.setText("");
+			mTextView2.setText("");
 			load(resId);
 		}
 
@@ -135,7 +135,7 @@ public class MainActivity extends Activity implements OnSVGViewInfoListener {
 
 				System.gc();
 
-				mEditText1.setText("Size: " + mDF.format(fileSize) + "Byte\nBuild: " + mDF.format(buildTime) + "μs\nNative: " + mDF.format(Debug.getNativeHeapAllocatedSize() / 1024) + "KB\nDalvik: " + mDF.format(Runtime.getRuntime().totalMemory() / 1024 - Runtime.getRuntime().freeMemory() / 1024) + "KB");
+				mTextView1.setText("Size: " + mDF.format(fileSize) + "Byte\nBuild: " + mDF.format(buildTime) + "μs\nNative: " + mDF.format(Debug.getNativeHeapAllocatedSize() / 1024) + "KB\nDalvik: " + mDF.format(Runtime.getRuntime().totalMemory() / 1024 - Runtime.getRuntime().freeMemory() / 1024) + "KB");
 
 				mSvgView.setSVG(svg);
 
@@ -171,7 +171,7 @@ public class MainActivity extends Activity implements OnSVGViewInfoListener {
 	@Override
 	public void didSVGViewDraw(String time) {
 		// TODO Auto-generated method stub
-		mEditText2.append(time + "\n");
+		mTextView2.append(time + "\n");
 
 	}
 
