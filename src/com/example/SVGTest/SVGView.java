@@ -69,8 +69,6 @@ public class SVGView extends View {
 		canvas.drawPicture(picture, mRect);
 		long end = System.nanoTime();
 		long microseconds = (end - start) / 1000;
-
-		mListener.onSVGViewInfo("Draw: " + mDF.format(microseconds) + "μs");
 	}
 
 	private boolean mZooming = false;
