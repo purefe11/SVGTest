@@ -8,6 +8,7 @@ import android.graphics.Picture;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.FloatMath;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -15,17 +16,7 @@ import com.example.SVGTest.svg.SVG;
 
 public class SVGView extends View {
 
-	public abstract static interface OnSVGViewInfoListener {
-		public abstract void onSVGViewInfo(String info);
-	}
-
-	private OnSVGViewInfoListener mListener;
-
-	public void setOnTestViewInfoListener(OnSVGViewInfoListener listener) {
-		mListener = listener;
-	}
-
-	//	private static final String TAG = "SVGView";
+	private static final String TAG = "SVGView";
 
 	private SVG mSvg = null;
 
@@ -69,6 +60,7 @@ public class SVGView extends View {
 		canvas.drawPicture(picture, mRect);
 		long end = System.nanoTime();
 		long microseconds = (end - start) / 1000;
+		Log.i(TAG, "onDraw: " + mDF.format(microseconds) + "μs");
 	}
 
 	private boolean mZooming = false;
