@@ -27,7 +27,7 @@ public class SVGView extends View {
 
 	public SVGView(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		// TODO Auto-generated constructor stub
+		// TODO Auto-generated constructor stub		
 		setLayerType(LAYER_TYPE_SOFTWARE, null);
 	}
 
