@@ -46,6 +46,9 @@ public class MainActivity extends Activity {
 		findViewById(R.id.radio2).setOnClickListener(OnRadioClickListener);
 		findViewById(R.id.radio3).setOnClickListener(OnRadioClickListener);
 		findViewById(R.id.radio4).setOnClickListener(OnRadioClickListener);
+		findViewById(R.id.radio5).setOnClickListener(OnRadioClickListener);
+		findViewById(R.id.radio6).setOnClickListener(OnRadioClickListener);
+		findViewById(R.id.radio7).setOnClickListener(OnRadioClickListener);
 	}
 
 	@Override
@@ -96,6 +99,15 @@ public class MainActivity extends Activity {
 					break;
 				case R.id.radio4:
 					resId = R.raw.svg5;
+					break;
+				case R.id.radio5:
+					resId = R.raw.svg6;
+					break;
+				case R.id.radio6:
+					resId = R.raw.svg7;
+					break;
+				case R.id.radio7:
+					resId = R.raw.svg8;
 					break;
 			}
 

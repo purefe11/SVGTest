@@ -6,13 +6,13 @@
     android:orientation="vertical"
     tools:context=".MainActivity" >
 
-    <RadioGroup
+   <RadioGroup
         android:id="@+id/radioGroup1"
         android:layout_width="match_parent"
         android:layout_height="30dp"
         android:layout_marginTop="5dp"
         android:orientation="horizontal"
-        android:weightSum="5" >
+        android:weightSum="8" >
 
         <RadioButton
             android:id="@+id/radio0"
@@ -49,7 +49,28 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="5" />
-
+        
+        <RadioButton
+            android:id="@+id/radio5"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="6" />
+        
+        <RadioButton
+            android:id="@+id/radio6"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="7" />
+        
+        <RadioButton
+            android:id="@+id/radio7"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="8" />
+        
     </RadioGroup>
 
     <com.example.SVGTest.SVGView
