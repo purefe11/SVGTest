@@ -6,6 +6,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Picture;
 import android.graphics.RectF;
+import android.os.Debug;
 import android.util.AttributeSet;
 import android.util.FloatMath;
 import android.util.Log;
@@ -60,7 +61,8 @@ public class SVGView extends View {
 		canvas.drawPicture(picture, mRect);
 		long end = System.nanoTime();
 		long microseconds = (end - start) / 1000;
-		Log.i(TAG, "onDraw: " + mDF.format(microseconds) + "μs");
+		Log.i(TAG, "draw: " + mDF.format(microseconds) + "μs Native: " + mDF.format(Debug.getNativeHeapAllocatedSize() / 1024) + "KB Dalvik: " + mDF.format(Runtime.getRuntime().totalMemory() / 1024 - Runtime.getRuntime().freeMemory() / 1024) + "KB");
+
 	}
 
 	private boolean mZooming = false;
