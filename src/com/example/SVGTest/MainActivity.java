@@ -8,6 +8,7 @@ import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Debug;
+import android.os.Handler;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -27,6 +28,7 @@ public class MainActivity extends Activity {
 	private RadioButton mCheckedRadioButton = null;
 	private boolean mLoading = false;
 	private DecimalFormat mDF = new DecimalFormat();
+	private Handler mHandler = new Handler();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -77,8 +79,6 @@ public class MainActivity extends Activity {
 				return;
 			}
 
-			System.gc();
-
 			int resId = 0;
 
 			switch (v.getId()) {
@@ -127,13 +127,17 @@ public class MainActivity extends Activity {
 			protected void onPostExecute(SVG svg) {
 				// TODO Auto-generated method stub
 
-				System.gc();
-
-				mTextView.setText("Size: " + mDF.format(fileSize) + "Byte\nBuild: " + mDF.format(buildTime) + "μs\nNative: " + mDF.format(Debug.getNativeHeapAllocatedSize() / 1024) + "KB\nDalvik: " + mDF.format(Runtime.getRuntime().totalMemory() / 1024 - Runtime.getRuntime().freeMemory() / 1024) + "KB");
-
 				mSvgView.setSVG(svg);
 
-				mLoading = false;
+				System.gc();
+
+				mHandler.postDelayed(new Runnable() {
+					@Override
+					public void run() {
+						mTextView.setText("Size: " + mDF.format(fileSize) + "Byte\nBuild: " + mDF.format(buildTime) + "μs\nNative: " + mDF.format(Debug.getNativeHeapAllocatedSize() / 1024) + "KB\nDalvik: " + mDF.format(Runtime.getRuntime().totalMemory() / 1024 - Runtime.getRuntime().freeMemory() / 1024) + "KB");
+						mLoading = false;
+					}
+				}, 10);
 			}
 
 			@Override
